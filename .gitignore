@@ -1,6 +1,3 @@
-src/index.ts
-dist/
-
 # Logs
 logs
 *.log
@@ -89,3 +86,6 @@ typings/
 
 # DynamoDB Local files
 .dynamodb/
+
+# Dist
+dist

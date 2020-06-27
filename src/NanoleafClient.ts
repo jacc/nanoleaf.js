@@ -1,5 +1,4 @@
-import { EventEmitter } from 'events';
-import fetch from 'node-fetch';
+import fetch, { Response } from 'node-fetch';
 
 type NanoleafClientConstructorOptions = {
   host: string;
@@ -8,88 +7,64 @@ type NanoleafClientConstructorOptions = {
   token: string;
 };
 
-export enum READY_STATES {
-  notReady,
-  ready,
-}
-
-export class NanoleafClient extends EventEmitter {
+export class NanoleafClient {
   host: string;
   port: number;
   base: string;
   token: string;
   baseURL: string;
-  effects?: string[];
-  readyState: READY_STATES;
-  isFirstRequest: boolean = true;
 
+  /**
+   * Initiates the class
+   * @constructor
+   * @param options Options object
+   */
   constructor(options: NanoleafClientConstructorOptions) {
-    super();
-
     this.host = options.host;
     this.port = options.port || 16021;
     this.base = options.base || '/api/v1/';
     this.token = options.token;
     this.baseURL = `http://${this.host}:${this.port}${this.base}${this.token}`;
-    this.readyState = READY_STATES.notReady;
 
-    // you need this
-    // this.getEffects().then((effects) => {
-    //   this.effects = effects;
-    //   this.readyState = READY_STATES.ready;
-    //   this.emit('ready');
-    // });
-
-    this.getStatus().then(() => {
-      this.readyState = READY_STATES.ready;
-      this.emit('ready');
-    });
+    this.resolveFetch = this.resolveFetch.bind(this);
   }
 
-  checkReadyState() {
-    if (this.readyState !== READY_STATES.ready && !this.isFirstRequest) {
-      throw new Error('Instance is not ready just yet.');
-    }
-
-    this.isFirstRequest = false;
+  resolveFetch<T>(x: Response): Promise<T | boolean> {
+    if (x.ok) return x.status === 204 ? Promise.resolve(true) : x.json();
+    return Promise.resolve(false);
   }
 
-  async get(path: string) {
-    this.checkReadyState();
-    return fetch(`${this.baseURL}${path ? path : '/'}`).then((x) => x.json());
+  get(path: string): Promise<any | false> {
+    return fetch(`${this.baseURL}${path ? path : '/'}`).then(this.resolveFetch);
   }
 
-  async put(path: string, body: any) {
-    this.checkReadyState();
+  put(path: string, body: any): Promise<any | false> {
     return fetch(`${this.baseURL}${path ? path : '/'}`, {
       method: 'PUT',
       body: JSON.stringify(body),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    }).then((x) => {
-      console.log(x);
-      if (x.status === 204) {
-      } else if (x.status === 400) {
-        console.log(x.statusText);
-      } else {
-        x.json();
-      }
-    });
+      headers: { 'Content-Type': 'application/json' },
+    }).then(this.resolveFetch);
   }
 
   /**
    * Get status of connected Nanoleaf product
    */
-  async getStatus() {
+  getStatus() {
     return this.get(`/`);
+  }
+
+  /**
+   * Identify the Nanoleaf product. Flashes product twice with green color, used to make sure connection to product is active
+   */
+  identify() {
+    return this.get(`/identify`);
   }
 
   /**
    * Turn Nanoleaf product on
    */
-  async turnOn() {
-    return this.put(`/state/on`, {
+  turnOn() {
+    return this.put(`/state`, {
       on: { value: true },
     });
   }
@@ -97,49 +72,52 @@ export class NanoleafClient extends EventEmitter {
   /**
    * Turn Nanoleaf product off
    */
-  async turnOff() {
-    return this.put(`/state/off`, {
+  turnOff() {
+    return this.put(`/state`, {
       on: { value: false },
     });
   }
 
-  async getBrightness() {
+  /**
+   * Get current brighness value of the Nanoleaf product. Returns 0-100.
+   */
+  getBrightness() {
     return this.get(`/state/brightness`);
   }
 
   /**
-   *  Get current hue value of the Nanoleaf product
+   * Get current hue value of the Nanoleaf product. Returns 0-360.
    */
-  async getHue() {
+  getHue() {
     return this.get(`/state/hue`);
   }
 
   /**
-   * Get current saturation value of the Nanoleaf product
+   * Get current saturation value of the Nanoleaf product. Returns 0-100.
    */
-  async getSaturation() {
+  getSaturation() {
     return this.get(`/state/sat`);
   }
 
   /**
-   * Get current color temperature of the Nanoleaf product
+   * Get current color temperature of the Nanoleaf product. Supposed to return 1200-6500, instead returns 0-100.
    */
-  async getTemperature() {
+  getTemperature() {
     return this.get(`/state/ct`);
   }
 
   /**
    * Get array of effects installed on the Nanoleaf product
    */
-  async getEffects() {
+  getEffects() {
     return this.get('/effects/effectsList') as Promise<string[]>;
   }
 
   /**
    * Sets the brightness of the Nanoleaf product
-   * @param value The brightness from 0-100
+   * @param value The brightness from 0-100.
    */
-  async setBrightness(value: number) {
+  setBrightness(value: number) {
     return this.put(`/state`, {
       brightness: { value },
     });
@@ -147,9 +125,9 @@ export class NanoleafClient extends EventEmitter {
 
   /**
    * Sets the hue of the Nanoleaf product
-   * @param value The hue from 0-100
+   * @param value The hue from 0-100.
    */
-  async setHue(value: number) {
+  setHue(value: number) {
     return this.put(`/state`, {
       hue: { value },
     });
@@ -157,19 +135,29 @@ export class NanoleafClient extends EventEmitter {
 
   /**
    * Sets the saturation of the Nanoleaf product
-   * @param value The saturation from 1-100
+   * @param value The saturation from 0-100.
    */
-  async setSaturation(value: number) {
+  setSaturation(value: number) {
     return this.put(`/state`, {
       sat: { value },
     });
   }
 
   /**
-   * Set Nanoleaf product to specified effect
-   * @param select The effect
+   * Sets color temperature of the Nanoleaf product
+   * @param value The temperature between 0-100. Supposed to be 1200-6500 however API only accepts 0-100.
    */
-  async setEffect(select: string) {
+  setTemperature(value: number) {
+    return this.put(`/state`, {
+      ct: { value },
+    });
+  }
+
+  /**
+   * Set Nanoleaf product to specified effect
+   * @param select The effect. Case sensitive.
+   */
+  setEffect(select: string) {
     return this.put(`/effects`, { select });
   }
 
@@ -199,7 +187,7 @@ export class NanoleafClient extends EventEmitter {
       return null;
     }
 
-    const response = result.reduce((results, res) => {
+    const response = result.reduce((results, res: { key: string; data: any }) => {
       const { key, data } = res;
       return { ...results, [key]: data };
     }, {}) as { [key in keyof typeof requests]: any };
@@ -207,10 +195,11 @@ export class NanoleafClient extends EventEmitter {
     return response;
   }
 
-  static from(options: NanoleafClientConstructorOptions): Promise<NanoleafClient> {
-    return new Promise((r) => {
-      const instance = new NanoleafClient(options);
-      instance.on('ready', () => r(instance));
-    });
+  /**
+   * Generates a new client
+   * @param options The options object
+   */
+  static from(options: NanoleafClientConstructorOptions) {
+    return new NanoleafClient(options);
   }
 }

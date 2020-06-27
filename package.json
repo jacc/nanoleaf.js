@@ -6,7 +6,8 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "dev": "tsc && concurrently \"tsc -w\" \"nodemon dist/index.js\"",
-    "build": "tsc"
+    "build": "tsc",
+    "postinstall": "tsc"
   },
   "repository": {
     "type": "git",
@@ -30,6 +31,7 @@
   },
   "devDependencies": {
     "@types/node-fetch": "^2.5.7",
+    "concurrently": "^5.2.0",
     "typescript": "^3.9.5"
   },
   "publishConfig": {
