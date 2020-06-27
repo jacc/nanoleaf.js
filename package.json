@@ -1,13 +1,14 @@
 {
   "name": "nanoleaf.js",
   "version": "1.0.0",
-  "description": " JavaScript wrapper for interacting with Nanoleaf products programatically ",
+  "description": " A type safe Nanoleaf client for Node ",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "dev": "tsc && concurrently \"tsc -w\" \"nodemon dist/index.js\"",
     "build": "tsc",
-    "postinstall": "tsc"
+    "postinstall": "tsc",
+    "authorization": "node get_authorization.js"
   },
   "repository": {
     "type": "git",
@@ -27,6 +28,7 @@
   },
   "homepage": "https://github.com/jacc/nanoleaf.js#readme",
   "dependencies": {
+    "inquirer": "^7.2.0",
     "node-fetch": "^2.6.0"
   },
   "devDependencies": {
