@@ -1,0 +1,36 @@
+{
+  "name": "nanoleaf.js",
+  "version": "1.0.0",
+  "description": " JavaScript wrapper for interacting with Nanoleaf products programatically  JavaScript wrapper for interacting with Nanoleaf products programatically ",
+  "main": "index.js",
+  "scripts": {
+    "dev": "tsc && concurrently \"tsc -w\" \"nodemon dist/index.js\"",
+    "build": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jacc/nanoleaf.js.git"
+  },
+  "keywords": [
+    "nanoleaf",
+    "nanoleaf-aurora",
+    "nanoleaf-api",
+    "api",
+    "javascript"
+  ],
+  "author": "Jack LaFond",
+  "license": "SEE LICENSE IN LICENSE.md",
+  "bugs": {
+    "url": "https://github.com/jacc/nanoleaf.js/issues"
+  },
+  "homepage": "https://github.com/jacc/nanoleaf.js#readme",
+  "dependencies": {
+    "node-fetch": "^2.6.0"
+  },
+  "devDependencies": {
+    "@types/node-fetch": "^2.5.7",
+    "concurrently": "^5.2.0",
+    "prettier": "^2.0.5",
+    "typescript": "^3.9.5"
+  }
+}

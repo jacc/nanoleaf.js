@@ -1,3 +1,6 @@
+src/index.ts
+dist/
+
 # Logs
 logs
 *.log
