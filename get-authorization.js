@@ -1,5 +1,5 @@
-global.fetch = require('node-fetch');
-var inquirer = require('inquirer');
+const fetch = require('node-fetch');
+const inquirer = require('inquirer');
 
 console.log('[!] Prior to starting, make sure to hold down the power button for 5-7 seconds to enter pairing mode.');
 
