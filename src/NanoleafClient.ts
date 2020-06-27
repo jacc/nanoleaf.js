@@ -85,12 +85,18 @@ export class NanoleafClient extends EventEmitter {
     return this.get(`/`);
   }
 
+  /**
+   * Turn Nanoleaf product on
+   */
   async turnOn() {
     return this.put(`/state/on`, {
       on: { value: true },
     });
   }
 
+  /**
+   * Turn Nanoleaf product off
+   */
   async turnOff() {
     return this.put(`/state/off`, {
       on: { value: false },
@@ -159,6 +165,10 @@ export class NanoleafClient extends EventEmitter {
     });
   }
 
+  /**
+   * Set Nanoleaf product to specified effect
+   * @param select The effect
+   */
   async setEffect(select: string) {
     return this.put(`/effects`, { select });
   }
