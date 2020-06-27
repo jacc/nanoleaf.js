@@ -41,9 +41,9 @@ client.turnOff().then(console.log);
 ### JavaScript
 
 ```js
-const nanoleaf = import('nanoleaf.js');
+const { NanoleafClient } = require('nanoleaf.js');
 
-const client = new nanoleaf.NanoleafClient({
+const client = new ({
   host: 'Nanoleaf IP address',
   token: 'Authorization token',
 });
