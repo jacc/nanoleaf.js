@@ -31,5 +31,8 @@
   "devDependencies": {
     "@types/node-fetch": "^2.5.7",
     "typescript": "^3.9.5"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
   }
 }
