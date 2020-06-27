@@ -1,8 +1,9 @@
 {
   "name": "nanoleaf.js",
   "version": "1.0.0",
-  "description": " JavaScript wrapper for interacting with Nanoleaf products programatically  JavaScript wrapper for interacting with Nanoleaf products programatically ",
-  "main": "index.js",
+  "description": " JavaScript wrapper for interacting with Nanoleaf products programatically ",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "dev": "tsc && concurrently \"tsc -w\" \"nodemon dist/index.js\"",
     "build": "tsc"
@@ -29,8 +30,6 @@
   },
   "devDependencies": {
     "@types/node-fetch": "^2.5.7",
-    "concurrently": "^5.2.0",
-    "prettier": "^2.0.5",
     "typescript": "^3.9.5"
   }
 }
