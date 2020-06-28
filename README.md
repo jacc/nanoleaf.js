@@ -50,3 +50,8 @@ const client = new ({
 
 client.turnOff().then(console.log);
 ```
+
+## Developed by
+
+[Jack LaFond](https://github.com/jacc) - [@laf0nd](https://twitter.com/laf0nd)
+[Alistair Smtih](https://github.com/aabbccsmith) - [@aabbccsmith](https://twitter.com/aabbccsmith)
