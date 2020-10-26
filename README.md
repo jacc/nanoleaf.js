@@ -55,4 +55,4 @@ client.turnOff().then(console.log);
 
 [Jack LaFond](https://github.com/jacc) - [@laf0nd](https://twitter.com/laf0nd)
 
-[Alistair Smtih](https://github.com/aabbccsmith) - [@aabbccsmith](https://twitter.com/aabbccsmith)
+[Alistair Smith](https://github.com/aabbccsmith) - [@aabbccsmith](https://twitter.com/aabbccsmith)
